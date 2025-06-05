@@ -1,5 +1,13 @@
--- Load the Informant.wtf UI library (assuming it's already loaded or included)
-local Informant = _G.Informant or loadstring(game:HttpGet("https://raw.githubusercontent.com/weakhoes/Roblox-UI-Libs/refs/heads/main/2%20Informant.wtf%20Lib%20(FIXED)/informant.wtf%20Lib%20Source.lua"))()
+-- Fetch and load the Informant.wtf UI library from GitHub
+local success, Informant = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/weakhoes/Roblox-UI-Libs/refs/heads/main/2%20Informant.wtf%20Lib%20(FIXED)/informant.wtf%20Lib%20Source.lua"))()
+end)
+
+-- Check if library loaded successfully
+if not success or not Informant then
+    warn("Failed to load Informant.wtf library: " .. tostring(Informant))
+    return
+end
 
 -- Create a new tab named "AIMBOT"
 local AimbotTab = Informant:CreateTab("AIMBOT")
@@ -17,7 +25,12 @@ local function executeShoot()
         [1] = "Start",
         [2] = true
     }
-    ReplicatedStorage.Events.PlayerEvents.Shoot:FireServer(unpack(args))
+    local success, err = pcall(function()
+        ReplicatedStorage.Events.PlayerEvents.Shoot:FireServer(unpack(args))
+    end)
+    if not success then
+        warn("Failed to fire Shoot event: " .. tostring(err))
+    end
 end
 
 -- Add toggle button for Aimbot (Autogreen)
